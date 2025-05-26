@@ -4,10 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /*
@@ -32,6 +28,8 @@ public class Login extends javax.swing.JFrame {
         if(conn == null){
         }
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -176,20 +174,20 @@ public class Login extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
 
         String username = tfUsername.getText();
-        String password = Arrays.toString(tfPassword.getPassword());
+        String password = new String(tfPassword.getPassword());
+        
+        boolean login = UserStore.login(username, password);
+        
+        if (UserStore.login(username, password)) {
+            JOptionPane.showMessageDialog(this, "Login successful!");
+            this.dispose();
+            new MessageClass(username).setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this,"Invalid credentials");
+        }
+        
         if(username.isEmpty() || password.isEmpty()){
             JOptionPane.showMessageDialog(this, "Username/Password must be filled", "Error", JOptionPane.ERROR_MESSAGE);
-        }else{
-            try {
-                userLogin(username, password);
-            } catch (IOException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                
-               String status = loginClass();
-               
-               JOptionPane.showMessageDialog(this, status);
-               dispose();
-            }
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
@@ -250,41 +248,22 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JTextField tfUsername;
     // End of variables declaration//GEN-END:variables
 
-    private void userLogin(String username, String password) throws IOException {
-        if(username.equals("admin") && password.equals("1234")){
-            JOptionPane.showMessageDialog(null, "Login successful");
-        } else {
-            JOptionPane.showMessageDialog(null, "Invalid username or password.");
-            java.sql.Connection dbconn = DBConnect.connectionDB();
-        if(dbconn !=null){
-        try {
-            String sql = "Select * FROM users WHERE username = ? AND password = ?";
-            try (PreparedStatement st = dbconn.prepareStatement(sql)) {
-                st.setString(1, username);
-                st.setString(2, password);
-                try (ResultSet res = st.executeQuery()) {
-                    if(res.next()){
-                        //display dashboard or a new page after login.
-                        dispose();//Close the login window
-                        Chatbot d = new Chatbot();// Make sure this class exists
-                        d.setTitle("Chatbot");
-                        d.setVisible(true);
-                    }else{
-                        JOptionPane.showMessageDialog(null, "Invalid username or password.");
-                    }
-                }
-            }
-             dbconn.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE,null,ex);
-        }
-        }else{
-            System.out.println("The Connection not available.");
-        }
-    }
+    
 }
 
-    private String loginClass() {
+    
+
+    class Message {
+
+        public Message(String username) {
+        }
+
+        private void setVissible(boolean b) {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+    void setVisible(boolean b) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-}
+    }
+

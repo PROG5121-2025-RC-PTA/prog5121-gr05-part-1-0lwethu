@@ -13,8 +13,10 @@ import javax.swing.JTextField;
  * @author RC_Student_lab
  */
 public class Register1 extends javax.swing.JFrame {
+
+    static JTextField cellnumber;
     private final JTextField usernameField = null;
-    private final JTextField cellnumberField = null;
+    final JTextField cellnumberField = null;
     private Object passwordField;
     private Object lastnameField;
     private String registrationlogic;
@@ -32,8 +34,19 @@ public class Register1 extends javax.swing.JFrame {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    private String registerclass(String username, String password, String cellphone) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    
+
+    private static class CellphoneValidator {
+
+        private static boolean isValidCellPhone(String cellphone) {
+            // Optional: do something if needed
+            return false;
+            // Optional: do something if needed
+        }
+
+        public CellphoneValidator() {
+            
+        }
     }
     
 public class UsernameValidator {
@@ -126,7 +139,10 @@ public class CellphoneValidator{
         }
     }
 }
-}
+
+        private PasswordValidator() {
+        }
+    }
     /**
      * Creates new form Register1
      */
@@ -294,21 +310,41 @@ public class CellphoneValidator{
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         //Grab all the user's input
-        String username = usernameField.getText();
-        String password = new String(passwordField.toString());
-        String cellphone = cellnumberField.getText();
+        String username = jTextField3.getText();
+        var password = new String(jPasswordField1.getPassword());
+        String cellphone = jTextField4.getText();
+        
+        if (!UsernameValidator.isValidUsername(username)){
+            JOptionPane.showMessageDialog(this, "Invalid username");
+            return;
+        }
+        
+        if (!PasswordValidator.isValidPassword(password)){
+            JOptionPane.showMessageDialog(this, "Invalid Password");
+            return;
+        }
+        
+        if (!CellphoneValidator.isValidCellPhone(cellphone)){
+            JOptionPane.showMessageDialog(this, "Invalid cellphone number");
+        }
+        
+        boolean registered = UserStore.register1(username, password, cellphone);
+        if (registered){
+            JOptionPane.showMessageDialog(this, "Registration successful. Please log in.");
+            this.dispose();
+            new Login().setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(this, "Username already exists.");
+        }
+        
         
         //Try registering with logic
-        String result = registerclass(username, password,cellphone);
         
-        JOptionPane.showMessageDialog(this, result);
         
-        if (results("registration successfull")) {
-            LoginClass loginclass = new LoginClass(LoginClass);
-            loginclass.setVisible(true);
-            loginclass.setLocationRelativeTo(null);
-            dispose();
-        }
+       
+        
+        
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
